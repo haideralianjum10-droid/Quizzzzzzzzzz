@@ -117,6 +117,7 @@
         <p class="footer-warning">⚠️ Negative marking applied: Every incorrect response deducts 0.25 mark. Maintain accuracy.</p>
     </div>
 
+    <script src="questions-library.js"></script>
     <script>
         const TARGET_WEIGHTS = {
             GK: 40,
@@ -237,11 +238,25 @@
             return shufflePool(finalSet);
         }
 
-        function getTargetQuestionCount() {
-            if (selectedMode !== 'All') {
-                return 100;
+        function getAvailableQuestionCount() {
+            const stored = getStoredBank();
+            let total = 0;
+            Object.keys(stored).forEach(category => {
+                total += stored[category].length;
+            });
+            Object.keys(basePools).forEach(category => {
+                total += basePools[category].length;
+            });
+            return total;
+        }
+
+        function ensureQuestionLibrary() {
+            const stored = getStoredBank();
+            const totalStored = Object.values(stored).reduce((sum, items) => sum + items.length, 0);
+            if (totalStored > 0) return;
+            if (window.questionLibrary && typeof window.questionLibrary.loadLibraryCore === 'function') {
+                window.questionLibrary.loadLibraryCore();
             }
-            return 100;
         }
 
         function startQuiz() {
@@ -267,7 +282,7 @@
             const duplicates = parseInt(localStorage.getItem('modDuplicates') || '0', 10);
             document.getElementById('importedCount').textContent = totalImported;
             document.getElementById('duplicatesCount').textContent = duplicates;
-            document.getElementById('totalQuestions').textContent = getTargetQuestionCount();
+            document.getElementById('totalQuestions').textContent = getAvailableQuestionCount();
         }
 
         function updateScore() {
@@ -280,6 +295,7 @@
         document.getElementById('correctCount').addEventListener('input', updateScore);
         document.getElementById('incorrectCount').addEventListener('input', updateScore);
 
+        ensureQuestionLibrary();
         setQuizMode('All');
         refreshStats();
     </script>
