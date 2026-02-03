@@ -208,42 +208,40 @@
             const stored = getStoredBank();
             const counts = normalizeCounts(100);
             const finalSet = [];
+
             const seen = new Set();
+
             const categories = selectedMode === 'All' ? Object.keys(counts) : [selectedMode];
             categories.forEach(category => {
                 const pool = [...basePools[category], ...stored[category]];
                 if (!pool.length) return;
-                const shuffled = shufflePool(pool);
                 const limit = selectedMode === 'All' ? counts[category] : 100;
-                for (let i = 0; i < Math.min(limit, shuffled.length); i += 1) {
-                    const item = shuffled[i];
-                    const key = `${category}::${item.question}`.toLowerCase();
-                    if (seen.has(key)) return;
-                    seen.add(key);
-                    finalSet.push({
-                        category,
-                        question: item.question,
-                        options: item.options,
-                        correct: item.correct,
-                        difficulty: item.difficulty,
-                        explanation: item.explanation,
-                        hiddenLogic: item.hiddenLogic || null
-                    });
+                let added = 0;
+                while (added < limit) {
+                    const shuffled = shufflePool(pool);
+                    for (let i = 0; i < shuffled.length && added < limit; i += 1) {
+                        const item = shuffled[i];
+                        finalSet.push({
+                            category,
+                            question: item.question,
+                            options: item.options,
+                            correct: item.correct,
+                            difficulty: item.difficulty,
+                            explanation: item.explanation,
+                            hiddenLogic: item.hiddenLogic || null
+                        });
+                        added += 1;
+                    }
                 }
             });
             return shufflePool(finalSet);
         }
 
-        function getAvailableQuestionCount() {
-            const stored = getStoredBank();
-            const seen = new Set();
-            Object.keys(basePools).forEach(category => {
-                [...basePools[category], ...stored[category]].forEach(item => {
-                    if (!item.question) return;
-                    seen.add(`${category}::${item.question}`.toLowerCase());
-                });
-            });
-            return seen.size;
+        function getTargetQuestionCount() {
+            if (selectedMode !== 'All') {
+                return 100;
+            }
+            return 100;
         }
 
         function startQuiz() {
@@ -269,7 +267,7 @@
             const duplicates = parseInt(localStorage.getItem('modDuplicates') || '0', 10);
             document.getElementById('importedCount').textContent = totalImported;
             document.getElementById('duplicatesCount').textContent = duplicates;
-            document.getElementById('totalQuestions').textContent = getAvailableQuestionCount();
+            document.getElementById('totalQuestions').textContent = getTargetQuestionCount();
         }
 
         function updateScore() {
