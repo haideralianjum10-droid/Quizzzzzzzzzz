@@ -25,7 +25,9 @@
             --blue: #3b82f6;
             --card: rgba(24, 37, 61, 0.85);
             --border: rgba(212, 175, 55, 0.2);
+            --border-strong: rgba(212, 175, 55, 0.4);
             --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+            --glow: 0 0 0 1px rgba(212, 175, 55, 0.15), 0 10px 30px rgba(15, 23, 42, 0.45);
         }
 
         body {
@@ -36,10 +38,34 @@
             min-height: 100vh;
         }
 
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 20% 10%, rgba(212, 175, 55, 0.1), transparent 40%),
+                radial-gradient(circle at 80% 15%, rgba(59, 130, 246, 0.12), transparent 45%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+            background-size: 120px 120px;
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+        }
+
         .container {
             max-width: 1000px;
             margin: 0 auto;
             padding: 24px 20px 80px;
+            position: relative;
+            z-index: 1;
         }
 
         .top-nav {
@@ -48,10 +74,11 @@
             align-items: center;
             padding: 14px 20px;
             background: rgba(12, 20, 36, 0.9);
-            border: 1px solid rgba(212, 175, 55, 0.2);
+            border: 1px solid var(--border);
             border-radius: 14px;
             margin-bottom: 20px;
-            box-shadow: var(--shadow);
+            box-shadow: var(--glow);
+            backdrop-filter: blur(12px);
         }
 
         .brand {
@@ -75,6 +102,13 @@
             border-radius: 999px;
             border: 1px solid rgba(212, 175, 55, 0.2);
             background: rgba(17, 27, 47, 0.8);
+            transition: all 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            border-color: var(--border-strong);
+            color: #f8fafc;
+            transform: translateY(-1px);
         }
 
         .nav-links a.active {
@@ -88,7 +122,7 @@
             border-radius: 18px;
             border: 1px solid rgba(212, 175, 55, 0.2);
             padding: 26px;
-            box-shadow: var(--shadow);
+            box-shadow: var(--glow);
         }
 
         .quiz-header {
@@ -114,6 +148,7 @@
             border: 1px solid rgba(212, 175, 55, 0.3);
             background: rgba(17, 27, 47, 0.9);
             color: var(--gold);
+            box-shadow: inset 0 0 0 1px rgba(212, 175, 55, 0.08);
         }
 
         .timer {
@@ -137,13 +172,51 @@
             gap: 10px;
         }
 
+        .answer-panel {
+            margin-top: 16px;
+            padding: 14px;
+            border-radius: 12px;
+            background: rgba(12, 20, 36, 0.85);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .answer-panel.hidden {
+            display: none;
+        }
+
+        .answer-panel h4 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--slate);
+            margin-bottom: 6px;
+        }
+
+        .answer-panel p {
+            color: #e2e8f0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .answer-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: 12px;
+        }
+
         .option {
             background: rgba(12, 20, 36, 0.8);
             border-radius: 12px;
             padding: 12px 14px;
             border: 1px solid rgba(148, 163, 184, 0.2);
             cursor: pointer;
-            transition: border 0.2s ease;
+            transition: border 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .option:hover {
+            transform: translateY(-1px);
+            border-color: rgba(212, 175, 55, 0.35);
         }
 
         .option.selected {
@@ -168,6 +241,12 @@
             cursor: pointer;
             text-transform: uppercase;
             letter-spacing: 0.6px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.35);
         }
 
         .btn-primary {
@@ -186,6 +265,62 @@
             color: var(--slate);
             padding: 40px 20px;
         }
+
+        body.light {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        body.light::before,
+        body.light::after {
+            display: none;
+        }
+
+        body.light .top-nav,
+        body.light .quiz-shell {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(148, 163, 184, 0.3);
+            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+        }
+
+        body.light .nav-links a {
+            background: rgba(226, 232, 240, 0.7);
+            color: #0f172a;
+            border-color: rgba(148, 163, 184, 0.4);
+        }
+
+        body.light .nav-links a.active {
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            color: #0f172a;
+        }
+
+        body.light .pill,
+        body.light .option {
+            background: #ffffff;
+            color: #0f172a;
+            border-color: rgba(148, 163, 184, 0.4);
+        }
+
+        body.light .option.selected {
+            border-color: #0f172a;
+            box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.1);
+        }
+
+        body.light .question-meta,
+        body.light .timer {
+            color: #334155;
+        }
+
+        body.light .answer-panel {
+            background: #ffffff;
+            border-color: rgba(148, 163, 184, 0.4);
+        }
+
+        body.light .btn-secondary {
+            background: rgba(148, 163, 184, 0.2);
+            color: #0f172a;
+            border-color: rgba(148, 163, 184, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -193,7 +328,7 @@
         <nav class="top-nav">
             <div class="brand">MOD Study Engine</div>
             <div class="nav-links">
-                <a href="dashboard.html">Dashboard</a>
+                <a href="index.html">Dashboard</a>
                 <a href="import.html">Import Center</a>
                 <a href="questions.html">Question Library</a>
                 <a href="quiz.html" class="active">Quiz Runner</a>
@@ -219,9 +354,18 @@
                 <div class="question-title" id="questionTitle"></div>
                 <div class="question-meta" id="questionMeta"></div>
                 <div class="options" id="optionList"></div>
+                <div class="answer-actions">
+                    <button class="btn btn-secondary" id="toggleAnswerBtn">Show Answer</button>
+                </div>
+                <div class="answer-panel hidden" id="answerPanel">
+                    <h4>Correct Answer</h4>
+                    <p id="answerText"></p>
+                </div>
 
                 <div class="quiz-actions">
                     <button class="btn btn-secondary" id="prevBtn">Previous</button>
+                    <button class="btn btn-secondary" id="toggleThemeBtn">Light Theme</button>
+                    <button class="btn btn-secondary" id="endBtn">End Quiz</button>
                     <button class="btn btn-primary" id="nextBtn">Next</button>
                 </div>
             </div>
@@ -233,6 +377,7 @@
         let quizData = null;
         let currentIndex = 0;
         const answers = {};
+        const answerVisibility = {};
         let timerInterval = null;
         let autoAdvanceTimeout = null;
 
@@ -262,6 +407,15 @@
             document.getElementById('difficultyPill').textContent = `Level: ${question.difficulty}`;
             document.getElementById('questionTitle').textContent = question.question;
             document.getElementById('questionMeta').textContent = question.hiddenLogic ? question.hiddenLogic : `Explanation available after review.`;
+            const answerPanel = document.getElementById('answerPanel');
+            const answerText = document.getElementById('answerText');
+            const toggleAnswerBtn = document.getElementById('toggleAnswerBtn');
+            const correctIndex = question.correct;
+            const correctAnswer = question.options[correctIndex];
+            answerText.textContent = correctAnswer ? `(${String.fromCharCode(65 + correctIndex)}) ${correctAnswer}` : 'Answer not available.';
+            const isVisible = answerVisibility[currentIndex] || false;
+            answerPanel.classList.toggle('hidden', !isVisible);
+            toggleAnswerBtn.textContent = isVisible ? 'Hide Answer' : 'Show Answer';
 
             const options = document.getElementById('optionList');
             options.innerHTML = '';
@@ -335,6 +489,21 @@
             return result;
         }
 
+        function dedupeQuestions(questions) {
+            const seen = new Set();
+            return questions.filter((question, index) => {
+                const key = `${question.category || 'General'}::${question.question || ''}`.trim().toLowerCase();
+                if (!key || seen.has(key)) {
+                    return false;
+                }
+                seen.add(key);
+                return true;
+            }).map((question, index) => ({
+                ...question,
+                id: question.id || `q-${index + 1}`
+            }));
+        }
+
         function initQuiz() {
             if (!quizDataRaw) return;
             try {
@@ -344,7 +513,7 @@
             }
             if (!quizData || !quizData.questions || !quizData.questions.length) return;
 
-            quizData.questions = shuffleQuestionsByCategory(quizData.questions);
+            quizData.questions = shuffleQuestionsByCategory(dedupeQuestions(quizData.questions));
 
             document.getElementById('emptyState').style.display = 'none';
             document.getElementById('quizContent').style.display = 'block';
@@ -366,6 +535,24 @@
                 return;
             }
             alert('Quiz completed. Return to dashboard for scorecard entry.');
+        });
+
+        document.getElementById('toggleAnswerBtn').addEventListener('click', () => {
+            answerVisibility[currentIndex] = !answerVisibility[currentIndex];
+            renderQuestion();
+        });
+
+        document.getElementById('toggleThemeBtn').addEventListener('click', () => {
+            document.body.classList.toggle('light');
+            const button = document.getElementById('toggleThemeBtn');
+            button.textContent = document.body.classList.contains('light') ? 'Dark Theme' : 'Light Theme';
+        });
+
+        document.getElementById('endBtn').addEventListener('click', () => {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            alert('Quiz ended. Return to dashboard for scorecard entry.');
         });
 
         initQuiz();
