@@ -172,6 +172,39 @@
             gap: 10px;
         }
 
+        .answer-panel {
+            margin-top: 16px;
+            padding: 14px;
+            border-radius: 12px;
+            background: rgba(12, 20, 36, 0.85);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .answer-panel.hidden {
+            display: none;
+        }
+
+        .answer-panel h4 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--slate);
+            margin-bottom: 6px;
+        }
+
+        .answer-panel p {
+            color: #e2e8f0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .answer-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: 12px;
+        }
+
         .option {
             background: rgba(12, 20, 36, 0.8);
             border-radius: 12px;
@@ -265,6 +298,13 @@
                 <div class="question-title" id="questionTitle"></div>
                 <div class="question-meta" id="questionMeta"></div>
                 <div class="options" id="optionList"></div>
+                <div class="answer-actions">
+                    <button class="btn btn-secondary" id="toggleAnswerBtn">Show Answer</button>
+                </div>
+                <div class="answer-panel hidden" id="answerPanel">
+                    <h4>Correct Answer</h4>
+                    <p id="answerText"></p>
+                </div>
 
                 <div class="quiz-actions">
                     <button class="btn btn-secondary" id="prevBtn">Previous</button>
@@ -279,6 +319,7 @@
         let quizData = null;
         let currentIndex = 0;
         const answers = {};
+        const answerVisibility = {};
         let timerInterval = null;
         let autoAdvanceTimeout = null;
 
@@ -308,6 +349,15 @@
             document.getElementById('difficultyPill').textContent = `Level: ${question.difficulty}`;
             document.getElementById('questionTitle').textContent = question.question;
             document.getElementById('questionMeta').textContent = question.hiddenLogic ? question.hiddenLogic : `Explanation available after review.`;
+            const answerPanel = document.getElementById('answerPanel');
+            const answerText = document.getElementById('answerText');
+            const toggleAnswerBtn = document.getElementById('toggleAnswerBtn');
+            const correctIndex = question.correct;
+            const correctAnswer = question.options[correctIndex];
+            answerText.textContent = correctAnswer ? `(${String.fromCharCode(65 + correctIndex)}) ${correctAnswer}` : 'Answer not available.';
+            const isVisible = answerVisibility[currentIndex] || false;
+            answerPanel.classList.toggle('hidden', !isVisible);
+            toggleAnswerBtn.textContent = isVisible ? 'Hide Answer' : 'Show Answer';
 
             const options = document.getElementById('optionList');
             options.innerHTML = '';
@@ -381,6 +431,21 @@
             return result;
         }
 
+        function dedupeQuestions(questions) {
+            const seen = new Set();
+            return questions.filter((question, index) => {
+                const key = `${question.category || 'General'}::${question.question || ''}`.trim().toLowerCase();
+                if (!key || seen.has(key)) {
+                    return false;
+                }
+                seen.add(key);
+                return true;
+            }).map((question, index) => ({
+                ...question,
+                id: question.id || `q-${index + 1}`
+            }));
+        }
+
         function initQuiz() {
             if (!quizDataRaw) return;
             try {
@@ -390,7 +455,7 @@
             }
             if (!quizData || !quizData.questions || !quizData.questions.length) return;
 
-            quizData.questions = shuffleQuestionsByCategory(quizData.questions);
+            quizData.questions = shuffleQuestionsByCategory(dedupeQuestions(quizData.questions));
 
             document.getElementById('emptyState').style.display = 'none';
             document.getElementById('quizContent').style.display = 'block';
@@ -412,6 +477,11 @@
                 return;
             }
             alert('Quiz completed. Return to dashboard for scorecard entry.');
+        });
+
+        document.getElementById('toggleAnswerBtn').addEventListener('click', () => {
+            answerVisibility[currentIndex] = !answerVisibility[currentIndex];
+            renderQuestion();
         });
 
         initQuiz();
