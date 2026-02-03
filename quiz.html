@@ -433,6 +433,21 @@
             return result;
         }
 
+        function dedupeQuestions(questions) {
+            const seen = new Set();
+            return questions.filter((question, index) => {
+                const key = `${question.category || 'General'}::${question.question || ''}`.trim().toLowerCase();
+                if (!key || seen.has(key)) {
+                    return false;
+                }
+                seen.add(key);
+                return true;
+            }).map((question, index) => ({
+                ...question,
+                id: question.id || `q-${index + 1}`
+            }));
+        }
+
         function initQuiz() {
             if (!quizDataRaw) return;
             try {
@@ -442,7 +457,7 @@
             }
             if (!quizData || !quizData.questions || !quizData.questions.length) return;
 
-            quizData.questions = shuffleQuestionsByCategory(quizData.questions);
+            quizData.questions = shuffleQuestionsByCategory(dedupeQuestions(quizData.questions));
 
             document.getElementById('emptyState').style.display = 'none';
             document.getElementById('quizContent').style.display = 'block';
