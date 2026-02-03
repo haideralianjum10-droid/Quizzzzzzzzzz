@@ -4,339 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MOD Traffic Analyst Study Engine</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --navy: #0c1424;
-            --navy-2: #111b2f;
-            --navy-3: #18253d;
-            --gold: #d4af37;
-            --gold-bright: #f0c552;
-            --slate: #9aa4b2;
-            --green: #22c55e;
-            --red: #ef4444;
-            --blue: #3b82f6;
-            --card: rgba(24, 37, 61, 0.85);
-            --border: rgba(212, 175, 55, 0.2);
-            --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: radial-gradient(circle at top, rgba(26, 41, 66, 0.8), rgba(12, 20, 36, 0.95)),
-                linear-gradient(135deg, #0b1222 0%, #101b30 50%, #15263f 100%);
-            color: #eef2f6;
-            min-height: 100vh;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(circle at 20% 10%, rgba(212, 175, 55, 0.1), transparent 40%),
-                radial-gradient(circle at 80% 15%, rgba(59, 130, 246, 0.12), transparent 45%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 24px 20px 80px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .top-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 20px;
-            background: rgba(12, 20, 36, 0.9);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 14px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow);
-        }
-
-        .brand {
-            font-weight: 800;
-            color: var(--gold);
-            letter-spacing: 1px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #e2e8f0;
-            font-size: 13px;
-            font-weight: 600;
-            padding: 8px 14px;
-            border-radius: 999px;
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            background: rgba(17, 27, 47, 0.8);
-        }
-
-        .nav-links a.active {
-            background: linear-gradient(135deg, var(--gold), var(--gold-bright));
-            color: var(--navy);
-            border: none;
-        }
-
-        .hero {
-            background: rgba(12, 20, 36, 0.85);
-            border-radius: 22px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            padding: 30px;
-            box-shadow: var(--shadow);
-            text-align: center;
-        }
-
-        .hero h1 {
-            color: var(--gold);
-            font-size: 30px;
-            margin-bottom: 12px;
-        }
-
-        .hero p {
-            color: var(--slate);
-            font-size: 14px;
-            margin-bottom: 16px;
-        }
-
-        .pill-row {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 18px;
-        }
-
-        .pill {
-            padding: 6px 14px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 700;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            background: rgba(17, 27, 47, 0.9);
-            color: var(--gold);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-top: 20px;
-        }
-
-        .stat-card {
-            background: var(--card);
-            border-radius: 14px;
-            border: 1px solid var(--border);
-            padding: 18px;
-        }
-
-        .stat-card h3 {
-            color: var(--gold);
-            font-size: 26px;
-            margin-bottom: 6px;
-        }
-
-        .stat-card span {
-            color: var(--slate);
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .section {
-            background: rgba(17, 27, 47, 0.85);
-            border-radius: 18px;
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            padding: 26px;
-            margin-top: 24px;
-            box-shadow: var(--shadow);
-        }
-
-        .section h2 {
-            color: var(--gold);
-            font-size: 20px;
-            margin-bottom: 12px;
-        }
-
-        .section p {
-            color: var(--slate);
-            font-size: 13px;
-            line-height: 1.6;
-        }
-
-        .legend-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 14px;
-        }
-
-        .legend-card {
-            background: rgba(12, 20, 36, 0.8);
-            border-radius: 14px;
-            padding: 16px;
-            border: 1px solid rgba(148, 163, 184, 0.15);
-        }
-
-        .legend-card h4 {
-            color: var(--gold);
-            font-size: 15px;
-            margin-bottom: 8px;
-        }
-
-        .legend-card p {
-            font-size: 12px;
-            color: var(--slate);
-        }
-
-        .scorecard-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 16px;
-            background: rgba(12, 20, 36, 0.6);
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .scorecard-table th,
-        .scorecard-table td {
-            padding: 12px 14px;
-            border-bottom: 1px solid rgba(148, 163, 184, 0.15);
-            font-size: 13px;
-        }
-
-        .scorecard-table th {
-            text-align: left;
-            color: var(--gold);
-            background: rgba(15, 26, 44, 0.8);
-        }
-
-        .scorecard-table input {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            border-radius: 8px;
-            padding: 8px;
-            color: #fff;
-        }
-
-        .start-area {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .start-btn {
-            padding: 16px 36px;
-            font-size: 15px;
-            background: linear-gradient(135deg, var(--gold), var(--gold-bright));
-            color: var(--navy);
-            border-radius: 14px;
-            border: none;
-            font-weight: 800;
-            cursor: pointer;
-        }
-
-        .theme-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(10, 16, 30, 0.92);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-        }
-
-        .theme-overlay.show {
-            display: flex;
-        }
-
-        .theme-card {
-            background: rgba(17, 27, 47, 0.95);
-            border-radius: 18px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            padding: 26px;
-            width: min(520px, 90vw);
-            text-align: center;
-            box-shadow: var(--shadow);
-        }
-
-        .theme-card h3 {
-            color: var(--gold);
-            margin-bottom: 8px;
-        }
-
-        .theme-card p {
-            color: var(--slate);
-            font-size: 13px;
-            line-height: 1.6;
-        }
-
-        .theme-palette {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 16px 0;
-        }
-
-        .swatch {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .footer-warning {
-            margin-top: 24px;
-            text-align: center;
-            font-size: 13px;
-            color: #facc15;
-        }
-
-        @media (max-width: 720px) {
-            .hero h1 {
-                font-size: 24px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="./dashboard.css">
 </head>
 <body>
-    <div class="theme-overlay" id="themeOverlay">
-        <div class="theme-card">
-            <h3>Test Theme Activated</h3>
-            <p>High-contrast Navy, Gold, and Slate palette loaded for focus mode.</p>
-            <div class="theme-palette">
-                <span class="swatch" style="background: #0c1424;"></span>
-                <span class="swatch" style="background: #1b2a44;"></span>
-                <span class="swatch" style="background: #d4af37;"></span>
-                <span class="swatch" style="background: #9aa4b2;"></span>
-            </div>
-            <p>Launching exam view...</p>
-        </div>
-    </div>
-
     <div class="container">
         <nav class="top-nav">
             <div class="brand">MOD Study Engine</div>
             <div class="nav-links">
-                <a href="dashboard.html" class="active">Dashboard</a>
+                <a href="index.html" class="active">Dashboard</a>
                 <a href="import.html">Import Center</a>
                 <a href="questions.html">Question Library</a>
                 <a href="quiz.html">Quiz Runner</a>
@@ -505,6 +180,15 @@
             return counts;
         }
 
+        function shufflePool(items) {
+            const pool = [...items];
+            for (let i = pool.length - 1; i > 0; i -= 1) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [pool[i], pool[j]] = [pool[j], pool[i]];
+            }
+            return pool;
+        }
+
         function buildQuestionSet() {
             const stored = getStoredBank();
             const counts = normalizeCounts(100);
@@ -512,8 +196,9 @@
             Object.keys(counts).forEach(category => {
                 const pool = [...basePools[category], ...stored[category]];
                 if (!pool.length) return;
-                for (let i = 0; i < counts[category]; i += 1) {
-                    const item = pool[i % pool.length];
+                const shuffled = shufflePool(pool);
+                for (let i = 0; i < Math.min(counts[category], shuffled.length); i += 1) {
+                    const item = shuffled[i];
                     finalSet.push({
                         category,
                         question: item.question,
@@ -525,12 +210,10 @@
                     });
                 }
             });
-            return finalSet.slice(0, 100);
+            return shufflePool(finalSet).slice(0, 100);
         }
 
         function startQuiz() {
-            const themeOverlay = document.getElementById('themeOverlay');
-            themeOverlay.classList.add('show');
             const quizData = {
                 questions: buildQuestionSet(),
                 totalTimeMinutes: 80,
@@ -539,9 +222,7 @@
                 timestamp: new Date().toISOString()
             };
             localStorage.setItem('modQuizData', JSON.stringify(quizData));
-            setTimeout(() => {
-                window.location.href = 'quiz.html';
-            }, 800);
+            window.location.href = 'quiz.html';
         }
 
         function refreshStats() {
