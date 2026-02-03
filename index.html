@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MOD Traffic Analyst Study Engine</title>
 
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
@@ -331,8 +332,6 @@
         <nav class="top-nav">
             <div class="brand">MOD Study Engine</div>
             <div class="nav-links">
-
-
                 <a href="index.html" class="active">Dashboard</a>
                 <a href="import.html">Import Center</a>
                 <a href="questions.html">Question Library</a>
@@ -502,8 +501,6 @@
             return counts;
         }
 
-
-
         function shufflePool(items) {
             const pool = [...items];
             for (let i = pool.length - 1; i > 0; i -= 1) {
@@ -521,8 +518,14 @@
                 const pool = [...basePools[category], ...stored[category]];
                 if (!pool.length) return;
 
+
                 for (let i = 0; i < counts[category]; i += 1) {
                     const item = pool[i % pool.length];
+
+                const shuffled = shufflePool(pool);
+                for (let i = 0; i < Math.min(counts[category], shuffled.length); i += 1) {
+                    const item = shuffled[i];
+
 
                 const shuffled = shufflePool(pool);
                 for (let i = 0; i < Math.min(counts[category], shuffled.length); i += 1) {
@@ -540,6 +543,7 @@
                 }
             });
 
+
             return finalSet.slice(0, 100);
         }
 
@@ -547,6 +551,7 @@
 
             const themeOverlay = document.getElementById('themeOverlay');
             themeOverlay.classList.add('show');
+
 
 
             return shufflePool(finalSet).slice(0, 100);
@@ -562,9 +567,11 @@
             };
             localStorage.setItem('modQuizData', JSON.stringify(quizData));
 
+
             setTimeout(() => {
                 window.location.href = 'quiz.html';
             }, 800);
+
             window.location.href = 'quiz.html';
         }
 
