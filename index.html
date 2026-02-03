@@ -208,6 +208,9 @@
             const stored = getStoredBank();
             const counts = normalizeCounts(100);
             const finalSet = [];
+
+            const seen = new Set();
+
             const categories = selectedMode === 'All' ? Object.keys(counts) : [selectedMode];
             categories.forEach(category => {
                 const pool = [...basePools[category], ...stored[category]];
