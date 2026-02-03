@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOD Study Engine - Import Center</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #0c1424;
+            --navy-2: #111b2f;
+            --navy-3: #18253d;
+            --gold: #d4af37;
+            --gold-bright: #f0c552;
+            --slate: #9aa4b2;
+            --green: #22c55e;
+            --red: #ef4444;
+            --blue: #3b82f6;
+            --card: rgba(24, 37, 61, 0.85);
+            --border: rgba(212, 175, 55, 0.2);
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top, rgba(26, 41, 66, 0.8), rgba(12, 20, 36, 0.95)),
+                linear-gradient(135deg, #0b1222 0%, #101b30 50%, #15263f 100%);
+            color: #eef2f6;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 20% 10%, rgba(212, 175, 55, 0.1), transparent 40%),
+                radial-gradient(circle at 80% 15%, rgba(59, 130, 246, 0.12), transparent 45%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 20px 80px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 20px;
+            background: rgba(12, 20, 36, 0.9);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 14px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .brand {
+            font-weight: 800;
+            color: var(--gold);
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #e2e8f0;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            background: rgba(17, 27, 47, 0.8);
+        }
+
+        .nav-links a.active {
+            background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+            color: var(--navy);
+            border: none;
+        }
+
+        .section {
+            background: rgba(17, 27, 47, 0.85);
+            border-radius: 18px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 26px;
+            margin-top: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .section h2 {
+            color: var(--gold);
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .section p {
+            color: var(--slate);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .import-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .import-card {
+            background: rgba(12, 20, 36, 0.9);
+            border-radius: 16px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 18px;
+        }
+
+        .import-card h4 {
+            color: var(--gold);
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .import-card textarea {
+            width: 100%;
+            min-height: 180px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 10px;
+            padding: 12px;
+            color: #fff;
+            font-size: 12px;
+        }
+
+        .import-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: none;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+            color: var(--navy);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+            color: white;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            color: var(--gold);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #f97316);
+            color: white;
+        }
+
+        .status-board {
+            margin-top: 14px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: rgba(15, 26, 44, 0.8);
+            border-left: 4px solid var(--gold);
+            font-size: 12px;
+            color: var(--slate);
+            display: none;
+        }
+
+        .status-board.show {
+            display: block;
+        }
+
+        .featured-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 12px;
+        }
+
+        .featured-card {
+            background: rgba(12, 20, 36, 0.7);
+            border-radius: 12px;
+            padding: 14px;
+            border: 1px solid rgba(148, 163, 184, 0.15);
+            font-size: 12px;
+            line-height: 1.6;
+            color: var(--slate);
+        }
+
+        .featured-card strong {
+            color: var(--gold);
+        }
+
+        .logic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 14px;
+        }
+
+        .logic-card {
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 14px;
+            padding: 14px;
+            background: rgba(12, 20, 36, 0.7);
+        }
+
+        .logic-card h5 {
+            color: var(--gold);
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .logic-card p {
+            font-size: 12px;
+            color: var(--slate);
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="top-nav">
+            <div class="brand">MOD Study Engine</div>
+            <div class="nav-links">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="import.html" class="active">Import Center</a>
+                <a href="questions.html">Question Library</a>
+                <a href="quiz.html">Quiz Runner</a>
+            </div>
+        </nav>
+
+        <section class="section">
+            <h2>Bulk Question Import (Category Segregation)</h2>
+            <p>Upload or paste JSON per category to keep the bank clean. Each entry must include category, options, correct index, difficulty level, and explanation. For Analytical, include hiddenLogic.</p>
+            <div class="import-grid" id="importGrid"></div>
+            <div class="status-board" id="importStatus"></div>
+        </section>
+
+        <section class="section">
+            <h2>Import Featured MCQs (Dec 3, 2022 Cache)</h2>
+            <p>Critical solved items aligned to MOD screening standards. Load once to merge with your question bank.</p>
+            <div class="import-actions" style="margin-bottom: 14px;">
+                <button class="btn btn-secondary" onclick="loadFeaturedCache()">Load Featured Cache</button>
+                <button class="btn btn-ghost" onclick="resetImportedBank()">Reset Imported Bank</button>
+            </div>
+            <div class="featured-list" id="featuredList"></div>
+        </section>
+
+        <section class="section">
+            <h2>Analytical Logic Breakdown</h2>
+            <p>Hidden logic is captured for every analytical question to support coaching and review.</p>
+            <div class="logic-grid" id="logicGrid"></div>
+        </section>
+    </div>
+
+    <script>
+        const CATEGORY_CONFIG = {
+            GK: { label: 'GK, Pakistan & Current Affairs' },
+            English: { label: 'English' },
+            Computer: { label: 'Computer Science' },
+            Analytical: { label: 'Analytical Reasoning' },
+            Islamic: { label: 'Islamic Studies' }
+        };
+
+        const featuredCache = [
+            { category: 'Computer', question: 'BIOS stands for Basic Input/Output System.', answer: 'Basic Input/Output System' },
+            { category: 'Computer', question: 'GPS stands for Global Positioning System.', answer: 'Global Positioning System' },
+            { category: 'Computer', question: 'Port 80 is commonly used by Apache HTTP Server.', answer: 'Port 80' },
+            { category: 'Computer', question: 'Octal number system uses base 8.', answer: 'Base 8' },
+            { category: 'GK', question: 'OIC was founded on Sept 25, 1969.', answer: '25 September 1969' },
+            { category: 'GK', question: 'National animal of Pakistan is Markhor.', answer: 'Markhor' },
+            { category: 'GK', question: 'Total republics in USSR were 15.', answer: '15' },
+            { category: 'GK', question: 'First Deputy Speaker: Tameez Ud Deen.', answer: 'Tameez Ud Deen' },
+            { category: 'GK', question: 'Kyoto Protocol was adopted in 1997.', answer: '1997' },
+            { category: 'GK', question: 'SAARC first summit held in 1985.', answer: '1985' },
+            { category: 'Islamic', question: 'Khateeb-ul-Anbia refers to Hazrat Shoaib (A.S).', answer: 'Hazrat Shoaib (A.S)' }
+        ];
+
+        const analyticalLogic = [
+            {
+                question: 'Linear seating: A sits left of B, B sits left of C. Who is in the middle?',
+                logic: 'Hidden Logic: Order A-B-C; B sits between A and C.'
+            },
+            {
+                question: 'Coding-Decoding: If CAT = DBU, then DOG = ?.',
+                logic: 'Hidden Logic: Shift each letter +1. D→E, O→P, G→H.'
+            },
+            {
+                question: 'Selection Logic: Choose number divisible by both 3 and 4.',
+                logic: 'Hidden Logic: LCM of 3 and 4 is 12; select multiples of 12.'
+            }
+        ];
+
+        function getStoredBank() {
+            const raw = localStorage.getItem('modQuestionBank');
+            if (!raw) {
+                return { GK: [], English: [], Computer: [], Analytical: [], Islamic: [] };
+            }
+            try {
+                return JSON.parse(raw);
+            } catch (error) {
+                return { GK: [], English: [], Computer: [], Analytical: [], Islamic: [] };
+            }
+        }
+
+        function saveBank(bank) {
+            localStorage.setItem('modQuestionBank', JSON.stringify(bank));
+        }
+
+        function showStatus(message, type = 'info') {
+            const status = document.getElementById('importStatus');
+            status.classList.add('show');
+            status.style.borderLeftColor = type === 'error' ? 'var(--red)' : type === 'success' ? 'var(--green)' : 'var(--gold)';
+            status.style.color = type === 'error' ? '#fecaca' : type === 'success' ? '#bbf7d0' : 'var(--slate)';
+            status.innerHTML = message;
+        }
+
+        function buildImportGrid() {
+            const grid = document.getElementById('importGrid');
+            grid.innerHTML = '';
+            Object.keys(CATEGORY_CONFIG).forEach(key => {
+                const card = document.createElement('div');
+                card.className = 'import-card';
+                card.innerHTML = `
+                    <h4>${CATEGORY_CONFIG[key].label}</h4>
+                    <textarea id="import_${key}" placeholder='[{"category":"${key}","question":"Sample?","options":["A","B","C","D"],"correct":0,"difficulty":"low","explanation":"Explain","hiddenLogic":"Optional for Analytical"}]'></textarea>
+                    <div class="import-actions">
+                        <label class="btn btn-secondary" for="file_${key}">Upload JSON</label>
+                        <input type="file" id="file_${key}" accept="application/json" hidden>
+                        <button class="btn btn-primary" type="button" onclick="importQuestions('${key}')">Import</button>
+                        <button class="btn btn-ghost" type="button" onclick="validateJSON('${key}')">Validate</button>
+                        <button class="btn btn-danger" type="button" onclick="clearImport('${key}')">Clear</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+                const input = card.querySelector(`#file_${key}`);
+                input.addEventListener('change', event => handleFileUpload(event.target.files[0], key));
+            });
+        }
+
+        function clearImport(category) {
+            document.getElementById(`import_${category}`).value = '';
+            showStatus(`Cleared ${CATEGORY_CONFIG[category].label} input.`, 'info');
+        }
+
+        function handleFileUpload(file, category) {
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = event => {
+                document.getElementById(`import_${category}`).value = event.target.result;
+                showStatus(`Loaded JSON file for ${CATEGORY_CONFIG[category].label}.`, 'success');
+            };
+            reader.readAsText(file);
+        }
+
+        function validateJSON(category) {
+            const input = document.getElementById(`import_${category}`).value.trim();
+            if (!input) {
+                showStatus('Paste JSON before validating.', 'error');
+                return;
+            }
+            try {
+                const data = JSON.parse(input);
+                if (!Array.isArray(data)) {
+                    showStatus('JSON must be an array of questions.', 'error');
+                    return;
+                }
+                const errors = [];
+                data.forEach((item, index) => {
+                    if (!item.question) errors.push(`Row ${index + 1}: Missing question`);
+                    if (!Array.isArray(item.options) || item.options.length !== 4) errors.push(`Row ${index + 1}: Options must have 4 items`);
+                    if (typeof item.correct !== 'number') errors.push(`Row ${index + 1}: Correct must be number`);
+                    if (!item.difficulty) errors.push(`Row ${index + 1}: Missing difficulty`);
+                    if (!item.explanation) errors.push(`Row ${index + 1}: Missing explanation`);
+                });
+                if (errors.length) {
+                    showStatus(`Validation errors:<br>${errors.slice(0, 5).join('<br>')}`, 'error');
+                } else {
+                    showStatus(`Validation passed for ${CATEGORY_CONFIG[category].label}.`, 'success');
+                }
+            } catch (error) {
+                showStatus(`Invalid JSON: ${error.message}`, 'error');
+            }
+        }
+
+        function importQuestions(category) {
+            const input = document.getElementById(`import_${category}`).value.trim();
+            if (!input) {
+                showStatus('Paste JSON before importing.', 'error');
+                return;
+            }
+            try {
+                const data = JSON.parse(input);
+                if (!Array.isArray(data)) {
+                    showStatus('JSON must be an array.', 'error');
+                    return;
+                }
+                const bank = getStoredBank();
+                let imported = 0;
+                let duplicates = 0;
+                data.forEach(item => {
+                    const normalizedQuestion = item.question?.trim().toLowerCase();
+                    if (!normalizedQuestion) return;
+                    const isDuplicate = bank[category].some(q => q.question.toLowerCase() === normalizedQuestion);
+                    if (isDuplicate) {
+                        duplicates += 1;
+                        return;
+                    }
+                    bank[category].push({
+                        question: item.question,
+                        options: item.options,
+                        correct: item.correct,
+                        difficulty: item.difficulty,
+                        explanation: item.explanation,
+                        hiddenLogic: item.hiddenLogic || null
+                    });
+                    imported += 1;
+                });
+                saveBank(bank);
+                const totalDuplicates = parseInt(localStorage.getItem('modDuplicates') || '0', 10) + duplicates;
+                localStorage.setItem('modDuplicates', totalDuplicates.toString());
+                showStatus(`Imported ${imported} questions into ${CATEGORY_CONFIG[category].label}. Duplicates blocked: ${duplicates}.`, imported ? 'success' : 'info');
+            } catch (error) {
+                showStatus(`Import failed: ${error.message}`, 'error');
+            }
+        }
+
+        function loadFeaturedCache() {
+            const bank = getStoredBank();
+            let imported = 0;
+            featuredCache.forEach(item => {
+                bank[item.category].push({
+                    question: item.question,
+                    options: ['Option A', 'Option B', item.answer, 'Option D'],
+                    correct: 2,
+                    difficulty: 'mid',
+                    explanation: `Verified from Dec 3, 2022 cache: ${item.answer}.`
+                });
+                imported += 1;
+            });
+            saveBank(bank);
+            showStatus(`Featured cache loaded (${imported} questions).`, 'success');
+        }
+
+        function resetImportedBank() {
+            localStorage.setItem('modQuestionBank', JSON.stringify({ GK: [], English: [], Computer: [], Analytical: [], Islamic: [] }));
+            localStorage.setItem('modDuplicates', '0');
+            showStatus('Imported bank reset to empty.', 'info');
+        }
+
+        function renderFeaturedCache() {
+            const container = document.getElementById('featuredList');
+            container.innerHTML = '';
+            featuredCache.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'featured-card';
+                card.innerHTML = `<strong>${item.category}</strong> • ${item.question}<br><strong>Answer:</strong> ${item.answer}`;
+                container.appendChild(card);
+            });
+        }
+
+        function renderLogicCards() {
+            const grid = document.getElementById('logicGrid');
+            grid.innerHTML = '';
+            analyticalLogic.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'logic-card';
+                card.innerHTML = `<h5>${item.question}</h5><p>${item.logic}</p>`;
+                grid.appendChild(card);
+            });
+        }
+
+        buildImportGrid();
+        renderFeaturedCache();
+        renderLogicCards();
+    </script>
+</body>
+</html>

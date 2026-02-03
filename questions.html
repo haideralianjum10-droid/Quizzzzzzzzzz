@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOD Question Library</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #0c1424;
+            --navy-2: #111b2f;
+            --navy-3: #18253d;
+            --gold: #d4af37;
+            --gold-bright: #f0c552;
+            --slate: #9aa4b2;
+            --green: #22c55e;
+            --blue: #38bdf8;
+            --card: rgba(24, 37, 61, 0.85);
+            --border: rgba(212, 175, 55, 0.2);
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top, rgba(26, 41, 66, 0.8), rgba(12, 20, 36, 0.95)),
+                linear-gradient(135deg, #0b1222 0%, #101b30 50%, #15263f 100%);
+            color: #eef2f6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px 20px 80px;
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 20px;
+            background: rgba(12, 20, 36, 0.9);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 14px;
+            margin-bottom: 22px;
+            box-shadow: var(--shadow);
+        }
+
+        .brand {
+            font-weight: 800;
+            color: var(--gold);
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #e2e8f0;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            background: rgba(17, 27, 47, 0.8);
+        }
+
+        .nav-links a.active {
+            background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+            color: var(--navy);
+            border: none;
+        }
+
+        .hero {
+            background: var(--card);
+            border-radius: 18px;
+            padding: 28px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .hero h1 {
+            color: var(--gold);
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            color: var(--slate);
+            line-height: 1.6;
+            margin-bottom: 18px;
+        }
+
+        .pill-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+
+        .pill {
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: rgba(17, 27, 47, 0.9);
+            color: var(--gold);
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: rgba(12, 20, 36, 0.85);
+            border-radius: 16px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            padding: 18px;
+        }
+
+        .card h3 {
+            color: var(--blue);
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            color: var(--slate);
+            font-size: 13px;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 18px;
+            border-radius: 10px;
+            border: none;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+            color: var(--navy);
+        }
+
+        .btn-secondary {
+            background: rgba(56, 189, 248, 0.2);
+            color: #bae6fd;
+            border: 1px solid rgba(56, 189, 248, 0.4);
+        }
+
+        .status {
+            margin-top: 16px;
+            padding: 14px;
+            border-radius: 12px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #bbf7d0;
+            display: none;
+        }
+
+        .status.show {
+            display: block;
+        }
+
+        .library-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .library-table th,
+        .library-table td {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+            font-size: 13px;
+        }
+
+        .library-table th {
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="top-nav">
+            <div class="brand">MOD Study Engine</div>
+            <div class="nav-links">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="import.html">Import Center</a>
+                <a href="questions.html" class="active">Question Library</a>
+                <a href="quiz.html">Quiz Runner</a>
+            </div>
+        </nav>
+
+        <section class="hero">
+            <h1>Questions Library (2200+ Verified Items)</h1>
+            <p>Load a curated, category-balanced question library built from real facts, grammar rules, computer fundamentals, analytical series, and Islamic studies references. This adds 2200+ unique MCQs into your local question bank for instant mock-test generation.</p>
+            <div class="pill-row">
+                <span class="pill">GK • 1300+</span>
+                <span class="pill">English • 200</span>
+                <span class="pill">Computer • 200</span>
+                <span class="pill">Analytical • 300</span>
+                <span class="pill">Islamic • 100+</span>
+            </div>
+
+            <div class="cards">
+                <div class="card">
+                    <h3>Category Balance</h3>
+                    <p>Question weights mirror MOD screening focus while keeping the test mix realistic for Traffic Analyst and Security Supervisor items.</p>
+                </div>
+                <div class="card">
+                    <h3>Smart De-duplication</h3>
+                    <p>Items are merged into your local bank and skip duplicates by question text, so imports stay clean.</p>
+                </div>
+                <div class="card">
+                    <h3>Immediate Use</h3>
+                    <p>Once loaded, head to Dashboard and click Start Quiz to launch a shuffled 100-MCQ mock test.</p>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-primary" id="loadLibraryBtn">Load 1000+ Question Pack</button>
+                <button class="btn btn-secondary" id="previewBtn">Preview Sample Questions</button>
+            </div>
+
+            <div class="status" id="statusBox"></div>
+
+            <table class="library-table" id="previewTable" style="display:none;">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Question</th>
+                        <th>Difficulty</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+    </div>
+
+    <script src="questions-library.js"></script>
+</body>
+</html>
