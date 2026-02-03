@@ -25,10 +25,7 @@
             --blue: #3b82f6;
             --card: rgba(24, 37, 61, 0.85);
             --border: rgba(212, 175, 55, 0.2);
-            --border-strong: rgba(212, 175, 55, 0.4);
-            --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
-            --glow: 0 0 0 1px rgba(212, 175, 55, 0.15), 0 10px 30px rgba(15, 23, 42, 0.45);
-        }
+
 
         body {
             font-family: 'Inter', sans-serif;
@@ -48,17 +45,6 @@
             z-index: 0;
         }
 
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
-            background-size: 120px 120px;
-            opacity: 0.15;
-            pointer-events: none;
-            z-index: 0;
-        }
 
         .container {
             max-width: 1200px;
@@ -74,12 +60,7 @@
             align-items: center;
             padding: 14px 20px;
             background: rgba(12, 20, 36, 0.9);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            margin-bottom: 20px;
-            box-shadow: var(--glow);
-            backdrop-filter: blur(12px);
-        }
+
 
         .brand {
             font-weight: 800;
@@ -102,14 +83,7 @@
             border-radius: 999px;
             border: 1px solid rgba(212, 175, 55, 0.2);
             background: rgba(17, 27, 47, 0.8);
-            transition: all 0.2s ease;
-        }
 
-        .nav-links a:hover {
-            border-color: var(--border-strong);
-            color: #f8fafc;
-            transform: translateY(-1px);
-        }
 
         .nav-links a.active {
             background: linear-gradient(135deg, var(--gold), var(--gold-bright));
@@ -122,9 +96,7 @@
             border-radius: 22px;
             border: 1px solid rgba(212, 175, 55, 0.3);
             padding: 30px;
-            box-shadow: var(--glow);
-            text-align: center;
-        }
+
 
         .hero h1 {
             color: var(--gold);
@@ -153,9 +125,7 @@
             font-weight: 700;
             border: 1px solid rgba(212, 175, 55, 0.3);
             background: rgba(17, 27, 47, 0.9);
-            color: var(--gold);
-            box-shadow: inset 0 0 0 1px rgba(212, 175, 55, 0.08);
-        }
+
 
         .stats-grid {
             display: grid;
@@ -169,14 +139,7 @@
             border-radius: 14px;
             border: 1px solid var(--border);
             padding: 18px;
-            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-        }
 
-        .stat-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--border-strong);
-            box-shadow: var(--glow);
-        }
 
         .stat-card h3 {
             color: var(--gold);
@@ -197,8 +160,6 @@
             border: 1px solid rgba(212, 175, 55, 0.2);
             padding: 26px;
             margin-top: 24px;
-            box-shadow: var(--glow);
-        }
 
         .section h2 {
             color: var(--gold);
@@ -223,13 +184,7 @@
             border-radius: 14px;
             padding: 16px;
             border: 1px solid rgba(148, 163, 184, 0.15);
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
 
-        .legend-card:hover {
-            transform: translateY(-3px);
-            border-color: rgba(212, 175, 55, 0.35);
-        }
 
         .legend-card h4 {
             color: var(--gold);
@@ -271,14 +226,6 @@
             border-radius: 8px;
             padding: 8px;
             color: #fff;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .scorecard-table input:focus {
-            outline: none;
-            border-color: var(--border-strong);
-            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
-        }
 
         .start-area {
             display: flex;
@@ -295,14 +242,7 @@
             border: none;
             font-weight: 800;
             cursor: pointer;
-            box-shadow: 0 12px 24px rgba(212, 175, 55, 0.25);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
 
-        .start-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 16px 30px rgba(212, 175, 55, 0.35);
-        }
 
         .theme-overlay {
             position: fixed;
@@ -386,7 +326,6 @@
         <nav class="top-nav">
             <div class="brand">MOD Study Engine</div>
             <div class="nav-links">
-                <a href="index.html" class="active">Dashboard</a>
                 <a href="import.html">Import Center</a>
                 <a href="questions.html">Question Library</a>
                 <a href="quiz.html">Quiz Runner</a>
