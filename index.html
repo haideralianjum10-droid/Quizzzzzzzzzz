@@ -47,9 +47,19 @@
             </div>
         </section>
 
-        <section class="section">
-            <h2>Performance Architecture & Scoring</h2>
-            <p>Each correct response earns 1.0 mark. Every incorrect response deducts 0.25 mark. Unattempted items are neutral. Target pace is 48 seconds per question to finish within 80 minutes.</p>
+        <section class="section quiz-launch">
+            <h2>Launch Quiz</h2>
+            <div class="quiz-options">
+                <button class="option-btn" type="button" onclick="setQuizMode('All')">All Subjects</button>
+                <button class="option-btn" type="button" onclick="setQuizMode('GK')">GK Focus</button>
+                <button class="option-btn" type="button" onclick="setQuizMode('English')">English Focus</button>
+                <button class="option-btn" type="button" onclick="setQuizMode('Computer')">Computer Focus</button>
+                <button class="option-btn" type="button" onclick="setQuizMode('Analytical')">Analytical Focus</button>
+                <button class="option-btn" type="button" onclick="setQuizMode('Islamic')">Islamic Focus</button>
+            </div>
+            <div class="start-area">
+                <button class="start-btn" onclick="startQuiz()">🚀 START 100-MCQ MOCK TEST</button>
+            </div>
         </section>
 
         <section class="section">
@@ -84,8 +94,8 @@
         </section>
 
         <section class="section">
-            <h2>Scorecard Table</h2>
-            <p>[Correct Count] - ([Incorrect Count] × 0.25) = [Final Score]</p>
+            <h2>Performance Architecture & Scoring</h2>
+            <p>Each correct response earns 1.0 mark. Every incorrect response deducts 0.25 mark. Unattempted items are neutral. Target pace is 48 seconds per question to finish within 80 minutes.</p>
             <table class="scorecard-table">
                 <thead>
                     <tr>
@@ -103,10 +113,6 @@
                 </tbody>
             </table>
         </section>
-
-        <div class="start-area">
-            <button class="start-btn" onclick="startQuiz()">🚀 START 100-MCQ MOCK TEST</button>
-        </div>
 
         <p class="footer-warning">⚠️ Negative marking applied: Every incorrect response deducts 0.25 mark. Maintain accuracy.</p>
     </div>
@@ -189,16 +195,31 @@
             return pool;
         }
 
+        let selectedMode = 'All';
+
+        function setQuizMode(mode) {
+            selectedMode = mode;
+            document.querySelectorAll('.option-btn').forEach(button => {
+                button.classList.toggle('active', button.textContent.includes(mode) || (mode === 'All' && button.textContent.includes('All')));
+            });
+        }
+
         function buildQuestionSet() {
             const stored = getStoredBank();
             const counts = normalizeCounts(100);
             const finalSet = [];
-            Object.keys(counts).forEach(category => {
+            const seen = new Set();
+            const categories = selectedMode === 'All' ? Object.keys(counts) : [selectedMode];
+            categories.forEach(category => {
                 const pool = [...basePools[category], ...stored[category]];
                 if (!pool.length) return;
                 const shuffled = shufflePool(pool);
-                for (let i = 0; i < Math.min(counts[category], shuffled.length); i += 1) {
+                const limit = selectedMode === 'All' ? counts[category] : 100;
+                for (let i = 0; i < Math.min(limit, shuffled.length); i += 1) {
                     const item = shuffled[i];
+                    const key = `${category}::${item.question}`.toLowerCase();
+                    if (seen.has(key)) return;
+                    seen.add(key);
                     finalSet.push({
                         category,
                         question: item.question,
@@ -210,13 +231,30 @@
                     });
                 }
             });
-            return shufflePool(finalSet).slice(0, 100);
+            return shufflePool(finalSet);
+        }
+
+        function getAvailableQuestionCount() {
+            const stored = getStoredBank();
+            const seen = new Set();
+            Object.keys(basePools).forEach(category => {
+                [...basePools[category], ...stored[category]].forEach(item => {
+                    if (!item.question) return;
+                    seen.add(`${category}::${item.question}`.toLowerCase());
+                });
+            });
+            return seen.size;
         }
 
         function startQuiz() {
+            const questions = buildQuestionSet();
+            if (!questions.length) {
+                alert('No questions available. Import questions first.');
+                return;
+            }
             const quizData = {
-                questions: buildQuestionSet(),
-                totalTimeMinutes: 80,
+                questions,
+                totalTimeMinutes: Math.ceil((questions.length || 1) * 0.8),
                 pacePerQuestionSeconds: 48,
                 scoring: { correct: 1.0, incorrect: -0.25 },
                 timestamp: new Date().toISOString()
@@ -231,6 +269,7 @@
             const duplicates = parseInt(localStorage.getItem('modDuplicates') || '0', 10);
             document.getElementById('importedCount').textContent = totalImported;
             document.getElementById('duplicatesCount').textContent = duplicates;
+            document.getElementById('totalQuestions').textContent = getAvailableQuestionCount();
         }
 
         function updateScore() {
@@ -243,6 +282,7 @@
         document.getElementById('correctCount').addEventListener('input', updateScore);
         document.getElementById('incorrectCount').addEventListener('input', updateScore);
 
+        setQuizMode('All');
         refreshStats();
     </script>
 </body>
