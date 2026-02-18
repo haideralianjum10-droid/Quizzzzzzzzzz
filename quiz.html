@@ -266,61 +266,6 @@
             padding: 40px 20px;
         }
 
-        body.light {
-            background: #f8fafc;
-            color: #0f172a;
-        }
-
-        body.light::before,
-        body.light::after {
-            display: none;
-        }
-
-        body.light .top-nav,
-        body.light .quiz-shell {
-            background: rgba(255, 255, 255, 0.95);
-            border-color: rgba(148, 163, 184, 0.3);
-            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
-        }
-
-        body.light .nav-links a {
-            background: rgba(226, 232, 240, 0.7);
-            color: #0f172a;
-            border-color: rgba(148, 163, 184, 0.4);
-        }
-
-        body.light .nav-links a.active {
-            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-            color: #0f172a;
-        }
-
-        body.light .pill,
-        body.light .option {
-            background: #ffffff;
-            color: #0f172a;
-            border-color: rgba(148, 163, 184, 0.4);
-        }
-
-        body.light .option.selected {
-            border-color: #0f172a;
-            box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.1);
-        }
-
-        body.light .question-meta,
-        body.light .timer {
-            color: #334155;
-        }
-
-        body.light .answer-panel {
-            background: #ffffff;
-            border-color: rgba(148, 163, 184, 0.4);
-        }
-
-        body.light .btn-secondary {
-            background: rgba(148, 163, 184, 0.2);
-            color: #0f172a;
-            border-color: rgba(148, 163, 184, 0.4);
-        }
     </style>
 </head>
 <body>
@@ -364,7 +309,6 @@
 
                 <div class="quiz-actions">
                     <button class="btn btn-secondary" id="prevBtn">Previous</button>
-                    <button class="btn btn-secondary" id="toggleThemeBtn">Light Theme</button>
                     <button class="btn btn-secondary" id="endBtn">End Quiz</button>
                     <button class="btn btn-primary" id="nextBtn">Next</button>
                 </div>
@@ -540,12 +484,6 @@
         document.getElementById('toggleAnswerBtn').addEventListener('click', () => {
             answerVisibility[currentIndex] = !answerVisibility[currentIndex];
             renderQuestion();
-        });
-
-        document.getElementById('toggleThemeBtn').addEventListener('click', () => {
-            document.body.classList.toggle('light');
-            const button = document.getElementById('toggleThemeBtn');
-            button.textContent = document.body.classList.contains('light') ? 'Dark Theme' : 'Light Theme';
         });
 
         document.getElementById('endBtn').addEventListener('click', () => {

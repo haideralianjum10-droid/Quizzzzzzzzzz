@@ -2393,14 +2393,16 @@ const mergeQuestions = (existing, incoming) => {
 
 const statusBox = document.getElementById('statusBox');
 const previewTable = document.getElementById('previewTable');
-const previewBody = previewTable.querySelector('tbody');
+const previewBody = previewTable ? previewTable.querySelector('tbody') : null;
 
 const showStatus = (message) => {
+    if (!statusBox) return;
     statusBox.textContent = message;
     statusBox.classList.add('show');
 };
 
 const updatePreview = () => {
+    if (!previewTable || !previewBody) return;
     const library = buildQuestionLibrary();
     const sample = []
         .concat(library.GK.slice(0, 2))
@@ -2418,14 +2420,34 @@ const updatePreview = () => {
     previewTable.style.display = 'table';
 };
 
-const loadLibrary = () => {
+const loadLibraryCore = () => {
     const library = buildQuestionLibrary();
     const stored = getStoredBank();
     const { merged, duplicates } = mergeQuestions(stored, library);
     localStorage.setItem('modQuestionBank', JSON.stringify(merged));
     const totalAdded = Object.values(library).reduce((sum, items) => sum + items.length, 0) - duplicates;
-    showStatus(`Library loaded. Added ${totalAdded} new questions. Duplicates skipped: ${duplicates}.`);
+    return { totalAdded, duplicates };
 };
 
-document.getElementById('loadLibraryBtn').addEventListener('click', loadLibrary);
-document.getElementById('previewBtn').addEventListener('click', updatePreview);
+const loadLibrary = () => {
+    const result = loadLibraryCore();
+    showStatus(`Library loaded. Added ${result.totalAdded} new questions. Duplicates skipped: ${result.duplicates}.`);
+};
+
+const loadLibraryBtn = document.getElementById('loadLibraryBtn');
+const previewBtn = document.getElementById('previewBtn');
+
+if (loadLibraryBtn) {
+    loadLibraryBtn.addEventListener('click', loadLibrary);
+}
+
+if (previewBtn) {
+    previewBtn.addEventListener('click', updatePreview);
+}
+
+window.questionLibrary = {
+    buildQuestionLibrary,
+    mergeQuestions,
+    getStoredBank,
+    loadLibraryCore
+};
